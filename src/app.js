@@ -10,6 +10,7 @@ const expertPriceRoutes = require('./routes/expertPriceRoutes');
 const userRoutes = require('./routes/userRoutes');
 const userWalletRoutes = require('./routes/userWalletRoutes');
 const expertPost = require('./routes/expertPostRoutes');
+const expertFollower = require('./routes/expertFollowerRoutes');
 
 
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/expert-price', expertPriceRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/wallet", userWalletRoutes);
 app.use("/api/createpost",expertPost);
+app.use("/api",expertFollower);
 
 module.exports = app;
 
