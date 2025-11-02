@@ -11,6 +11,7 @@ const userRoutes = require('./routes/userRoutes');
 const userWalletRoutes = require('./routes/userWalletRoutes');
 const expertPost = require('./routes/expertPostRoutes');
 const expertFollower = require('./routes/expertFollowerRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 
 const app = express();
@@ -26,6 +27,11 @@ app.use("/api/users", userRoutes);
 app.use("/api/wallet", userWalletRoutes);
 app.use("/api/createpost",expertPost);
 app.use("/api",expertFollower);
+app.use('/api/chat', chatRoutes);
+app.use('/api/chat', chatRoutes);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/', 'index.html'));
+});
 
 module.exports = app;
 

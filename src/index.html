@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expert Chat</title>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+  <h2>💬 Chat App</h2>
+
+  <label>
+    <input type="radio" name="userType" value="user" checked> Normal User
+  </label>
+  <label>
+    <input type="radio" name="userType" value="expert"> Expert
+  </label>
+
+  <div id="messages"></div>
+  <input id="messageInput" placeholder="Type your message..." />
+  <button id="sendBtn">Send</button>
+
+  <script>
+    const socket = io('http://localhost:3000');
+    const user_id = 1;  // Example user
+    const expert_id = 2; // Example expert
+    let room_id = '';
+
+    // join room
+    socket.emit('joinRoom', { user_id, expert_id });
+
+    socket.on('chat_started', (data) => {
+      room_id = data.room_id;
+      document.getElementById('messages').innerHTML += '<p><b>💬 Chat started!</b></p>';
+    });
+
+    socket.on('message', (msg) => {
+      if (typeof msg === 'object') {
+        document.getElementById('messages').innerHTML += `
+          <p><b>${msg.sender_type === 'expert' ? 'Expert' : 'User'} (${msg.sender_id}):</b> ${msg.message}</p>
+        `;
+      } else {
+        document.getElementById('messages').innerHTML += `<p>${msg}</p>`;
+      }
+    });
+
+    socket.on('chat_ended', (msg) => {
+      document.getElementById('messages').innerHTML += `<p style="color:red">${msg}</p>`;
+    });
+
+    // send message
+    document.getElementById('sendBtn').onclick = () => {
+      const message = document.getElementById('messageInput').value;
+      const sender_type = document.querySelector('input[name="userType"]:checked').value;
+
+      socket.emit('sendMessage', { room_id, sender_id: sender_type === 'user' ? user_id : expert_id, sender_type, message });
+
+      document.getElementById('messageInput').value = '';
+    };
+  </script>
+</body>
+</html>
